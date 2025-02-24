@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cooking Blog</title>
+    <link rel="icon" href="logo.png" type="image/png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .recipe-details{
+            margin-left: 5%;
+        }
+        .recipe-title {
+            color: #FF4500; /* Change text color on hover (Tomato red) */
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); 
+    font-size: 2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    /*transition: color 0.3s ease, text-shadow 0.3s ease, transform 0.3s ease; /* Smooth transitions for color, shadow, and scale */
+}
+
+.recipe-title:hover {
+    color: #FF4500; 
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3), 0 0 25px #FF4500, 0 0 5px #FF4500; /* Glowing effect */
+}
+p{
+    font-size: 1.2rem;
+}
+
+    </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="#">Flavora</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mx-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="#">HOME</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="#">ABOUT</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="#">CONTACT</a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" href="upload.html">SUBMIT</a>
+          </li>
+        </ul>
+
+        <div class="d-flex">
+          <div class="input-group" id="search-group">
+              <input class="form-control" type="search" placeholder="Search.." aria-label="Search" id="search-input" onfocus="showDifficultyDropdown()" onblur="hideDifficultyDropdown()">
+          </div> 
+          <div class="dropdown-menu" id="difficulty-dropdown" style="display:none; position:absolute; width:100%; z-index: 10;">
+              <a class="dropdown-item" href="#" onclick="selectDifficulty('Easy')">Easy</a>
+              <a class="dropdown-item" href="#" onclick="selectDifficulty('Medium')">Medium</a>
+              <a class="dropdown-item" href="#" onclick="selectDifficulty('Hard')">Hard</a>
+          </div> 
+        </div> 
+      </div>
+    </div>
+</nav>
+
+<!-- Recipe Display Section -->
+<div class="container my-5">
+    <div class="row">
+        <!-- Left side: Recipe Image -->
+        <div class="col-lg-5">
+           <div class="card1 shadow-lg"> 
+            <img id="recipe-image" alt="Recipe Image" style="width:100%;" class="recipe-image" />
+           </div> 
+        </div>
+
+        <!-- Right side: Recipe Details -->
+        <div class="col-lg-6 recipe-details">
+            <div id="recipe-content"></div>
+            <h5>Ingredients:</h5>
+            <ul class="ingredient-list" id="recipe-ingredients">
+                <!-- Ingredients will be inserted here using JS -->
+            </ul>
+            <h5>Steps:</h5>
+            <ul class="step-list" id="recipe-steps">
+                <!-- Steps will be inserted here using JS -->
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+// Function to get URL parameters (recipe ID)
+function getUrlParameter(name) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(name);
+}
+
+// Sample recipes (You can replace this with actual data from a database)
+const recipes = {
+    "1": {
+        title: "Aloo Paratha",
+        description: "Soft, savory, stuffed flatbread delight.",
+        image: "img16.png",  // Example image link
+        ingredients: [
+          "2 potato",
+          "1/2 teaspoon red chilli powder",
+          "1 tablespoon coriander leaves",
+          "2 tablespoon onion",
+          "1/2 teaspoon garam masala powder",
+          "2 teaspoon virgin olive oil",
+          "1 cup wheat flour",
+          "1/2 cup water"
+        ],
+        instructions: {
+            Easy: ["Step 1: Mix flour, salt, oil, and water to form a smooth dough. Rest for 20-30 mins.", "Step 2: Heat oil, add cumin seeds, then mix in mashed potatoes, spices, and salt. Cook for 3-4 mins.","step 3: Divide dough into balls, roll them out, add the filling, seal, and roll again.","step 4: Cook on a hot tawa with ghee/oil until golden on both sides.","step 5: Enjoy with yogurt, pickle, or chutney."],
+            Medium: ["Step 1: Combine flour, salt, oil, and water to form a smooth dough. Let it rest for 20-30 minutes.", "Step 2: Heat oil, add cumin seeds, then mix in mashed potatoes, spices, and salt. Cook for 3-4 minutes.", "Step 3: Divide the dough into balls. Roll each ball, add the filling, seal, and roll again.","step 4: Cook the paratha on a hot tawa with ghee or oil until golden brown on both sides.","step 5: Serve hot with yogurt, pickle, or chutney. Enjoy!"],
+            Hard: ["Step 1: In a large mixing bowl, combine 2 cups of whole wheat flour, 1 tsp salt, and 2 tbsp oil. Gradually add water, a little at a time, to form a soft, smooth dough. Knead for 5-7 minutes, ensuring the dough is smooth and elastic. Cover with a damp cloth and let it rest for 20-30 minutes.", "Step 2: Heat 1 tbsp oil in a pan over medium heat. Add 1 tsp cumin seeds and allow them to splutter. Add 1 cup mashed boiled potatoes, 1 tsp garam masala, 1/2 tsp chili powder, 1/2 tsp turmeric, and salt to taste. Mix thoroughly and cook for 3-4 minutes to allow the spices to infuse into the potatoes. Let the mixture cool slightly.", "Step 3: Divide the rested dough into equal-sized balls (about 8-10). Roll each dough ball into a small disc. Place a spoonful of the potato filling in the center, then seal the dough around the filling. Gently roll the stuffed dough ball into a flat, round paratha, ensuring the filling stays intact.","step 4: Heat a tawa or skillet over medium-high heat. Place the rolled paratha on the hot tawa and cook for about 1-2 minutes until you see bubbles forming on the surface. Flip it and apply a thin layer of ghee or oil on both sides. Cook until golden brown and slightly crisp, about 2-3 minutes on each side. Repeat for the remaining parathas.","step 5: Serve the aloo paratha hot with a side of plain yogurt, tangy pickle, or mint chutney for a complete meal."]
+        }
+    },
+    "2": {
+        title: "Daal Bati",
+        description: "Crusty bati, flavorful dal, pure bliss.",
+        image: "img21.png",  // Example image link
+        ingredients: [
+           "1 cup wheat flour",
+           "1/4 cup green moong dal",
+           "1/4 cup chana dal",
+           "1/2 tablespoon ghee",
+           "1/4 teaspoon garam masala powder",
+           "1/2 teaspoon red chilli powder",
+           "1/8 teaspoon turmeric",
+           "1/4 teaspoon coriander powder"
+        ],
+        instructions: {
+            Easy: ["Step 1: Cook 1 cup dal (moong/toor) in water until soft.", "Step 2: Heat 1 tbsp ghee, add cumin seeds, onions, and sauté.","step 3:Add ginger-garlic paste, chopped tomatoes, turmeric, chili powder, and salt.","step 4:Add cooked dal, simmer for 5 minutes, and garnish with coriander.","step5:Mix 2 cups wheat flour, salt, and 1/4 cup ghee.","step 6:Add water to form dough, roll into balls.","step 7:Bake at 180°C (350°F) for 20-25 mins or roast on a tawa.","step 8:Dip in warm ghee."],
+            Medium: ["Step 1: Boil 1 cup toor/moong dal with 3 cups water until soft.", "Step 2: Heat 2 tbsp ghee, add 1 tsp cumin seeds, 1 chopped onion, sauté until golden.", "Step 3: Add 1 tsp ginger-garlic paste, 1 chopped tomato, 1 tsp turmeric, 1 tsp red chili powder, salt. Cook until soft.","step 4:Add the cooked dal to the tempering, simmer for 5-10 minutes. Adjust water for consistency.","step 5:Mix 2 cups wheat flour, 1/4 cup semolina (optional), 1/2 tsp baking powder, 1/4 tsp turmeric, salt, and 2 tbsp ghee. Add water to form a dough.","step 6:Roll into balls, flatten slightly.","step 7:Bake at 180°C (350°F) for 20-25 mins or roast on a tawa, turning till golden.","step 8:Dip baatis in warm ghee before serving."],
+            Hard: ["Step 1: Pressure cook 1 cup toor dal with 3-4 cups water, 1/2 tsp turmeric, and a pinch of asafoetida for 3-4 whistles.", "Step 2: Heat 2 tbsp ghee, add 1 tsp cumin seeds, 1 bay leaf, and 1 cinnamon stick. Sauté until aromatic.", "Step 3: Add 1 chopped onion, 1 chopped tomato, 1 tsp ginger-garlic paste, and 1-2 chopped green chilies. Cook until soft.","step 4:Add 1 tsp red chili powder, 1/2 tsp garam masala, salt, and cook for 2 mins.","step 5:Add cooked dal to the tempering. Simmer, adjust water, and let it cook for 10-15 minutes. Garnish with coriander.","step 6:Mix 2 cups wheat flour, 1/4 cup semolina, 1/2 tsp baking powder, 1/4 tsp turmeric, 1/2 tsp carom seeds, 1 tsp salt, and 2 tbsp ghee. Add water to form a stiff dough.","step 7:Roll into smooth balls, flatten slightly, and make a small indent in the center.","step 8:Preheat oven to 180°C (350°F). Bake baatis on a tray for 25-30 minutes until golden, flipping halfway.","step 9: Once done, dip baatis in melted ghee for a rich flavor."]
+        }
+    },
+    "3": {
+        title:"Dahi Vada",
+        description:"Fluffy vadas, chilled yogurt, spicy perfection.",
+        image:"img18.png",
+        ingredients: [
+        "1/2 cup Urad dal whole",
+        "1/2 cup Curd",
+        "3/4 cup Milk",
+        "2 teaspoon Green chutney",
+        "2 tablespoon Sweet chutney",
+        "1 tablespoon Coriander leaves chopped",
+        "1/2 teaspoon Red chilli powder",
+        "1/2 teaspoon Chaat masala",
+        "Salt",
+        "1/2 inch Ginger",
+        "1 Green chilli",
+        "Sev for topping"
+        ],
+        instructions:{
+            Easy:["step 1: Grind soaked dal with spices into a smooth batter.","step 2: Shape into balls and fry until golden.","step 3: Soak in warm water for 10-15 mins, then squeeze out excess water.","step 4: Whisk yogurt with salt, sugar, and cumin powder.","step 5: Place vadas in a dish, pour yogurt over them.","step 6: Add chutneys, chaat masala, and red chili powder. Serve."],
+            Medium:["step 1: Grind soaked urad dal with water into a smooth batter. Add salt, ginger, and green chilies.","step 2: Shape the batter into small balls and deep fry until golden brown.","step 3: Soak fried vadas in warm water for 10-15 minutes, then squeeze out excess water.","step 4: Place the vadas in a serving dish, pour whisked yogurt over them.","step 5: Drizzle tamarind and mint chutney, and sprinkle chaat masala, red chili powder, and coriander leaves.","step 6:Serve immediately or chill for 10 minutes."],
+            Hard:["step 1: Grind soaked dal with spices to a smooth batter; rest for 30 mins.","step 2: Shape and fry vadas in hot oil until golden.","step 3: Soak fried vadas in warm water for 15-20 minutes, then squeeze out excess water.","step 4: Whisk yogurt with salt, sugar, and cumin powder.","step 5: Pour yogurt over vadas and refrigerate for 10 mins.","step 6: Drizzle chutneys, sprinkle chaat masala, and red chili powder."]
+        }
+    },
+    "4":{
+        title:"Appe",
+        description:"Gloden, crispy bites with filled flavor.",
+        image:"img20.jpg",
+        ingredients:[
+        "1 cup rice",
+        "1/4 cup urad dal (split black gram)",
+        "1/2 tsp fenugreek seeds (methi)",
+        "Salt to taste",
+        "Water (for soaking and grinding)",
+        "1 small onion (finely chopped)",
+        "1-2 green chilies (finely chopped)",
+        "1/4 cup grated coconut (optional)",
+        "Fresh coriander (chopped)",
+        "1/2 tsp mustard seeds",
+        "1/4 tsp cumin seeds",
+        "Oil (for greasing the appe pan)"
+        ],
+        instructions:{
+            Easy:["step 1: Soak rice, urad dal, and fenugreek seeds for 4-5 hours.","step 2: Grind soaked ingredients into a smooth batter, add salt.","step 3: Heat oil, sauté onions, green chilies, and mustard seeds.","step 4: Add tempering to the batter and mix well.","step 5: Grease the appe pan, pour batter into molds, cook until golden brown on both sides."],
+            Medium:["step 1: Soak rice, urad dal, and fenugreek seeds for 4-5 hours. Grind into a smooth batter with salt.","step 2: Sauté chopped onions, green chilies, and mustard seeds in oil.","step 3: Add the tempering to the batter and mix well.","step 4: Grease the appe pan, pour batter into molds, and cook until golden brown on both sides."],
+            Hard:["step 1: Soak rice, urad dal, and fenugreek seeds for 4-6 hours. Grind into a smooth batter, adding salt.","step 2: Heat oil, sauté mustard seeds, cumin seeds, hing, onions, green chilies, and ginger until fragrant.","step 3: Add the tempering and fresh coriander to the batter. Mix well.","step 4: Grease the appe pan, pour in the batter, and cook until golden brown and crisp on both sides."]
+        }
+    },
+    "5":{
+        title:"Chole Bhature",
+        description:"Soft bhature, rich chole, pure joy.",
+        image:"img7.png",
+        ingredients:[
+        "1.5 cups all-purpose flour (maida)",
+        "1/2 cup sooji (rava or fine semolina)",
+        "1/2 tablespoon oil or ghee",
+        "1/2 tablespoon granulated fine sugar",
+        "1/2 teaspoon salt or as required",
+        "1/2 teaspoon baking soda",
+        "1/2 teaspoon baking powder",
+        "1/2 cup curd (yogurt)",
+        "2 to 3 tablespoons water for kneading or add as needed",
+        "oil for deep frying"
+        ],
+        instructions:{
+            Easy:["step 1: Sauté onions, ginger, garlic, and tomatoes with spices. Add cooked chickpeas and simmer.","step 2: Mix flour, semolina, yogurt, baking powder, and salt. Knead into a soft dough and rest.","step 3: Roll dough into balls, flatten, and deep fry until golden. Serve with Chole!"],
+            Medium:["step 1: Soak and cook chickpeas, then sauté onions, ginger, garlic, and green chilies in oil. Add tomatoes, spices (cumin, coriander, turmeric, etc.), and cook until flavors combine. Add cooked chickpeas and simmer.","step 2: Mix flour, semolina, yogurt, baking powder, sugar, and salt. Add water to form a soft dough. Let it rest for 30 minutes.","step 3: Roll the dough into small balls, roll out, and deep fry until golden. Serve with hot Chole!"],
+            Hard:["step 1: Soak chickpeas overnight, then cook in a pressure cooker with bay leaves and tea bags for color. In oil, sauté finely chopped onions, garlic, ginger, and green chilies. Add pureed tomatoes, cook with spices (cumin, coriander, garam masala, amchur, red chili), and add the cooked chickpeas. Simmer for 20 minutes, adjusting consistency.","step 2: Mix all-purpose flour, semolina, baking powder, sugar, and salt. Add yogurt and water, knead until smooth, then rest for 30-45 minutes.","step 3: Roll dough into balls, flatten into thick discs, and deep fry in hot oil until puffed and golden. Serve with the Chole, garnished with fresh coriander."]
+        }
+    },
+    "6":{
+        title:"Paav Bhaji",
+        description:"Spicy bhaji, soft pav, perfect harmony.",
+        image:"img8.png",
+        ingredients:[
+        "2 cups mixed vegetables (potatoes, carrots, peas, cauliflower)",
+        "1 onion, finely chopped",
+        "1 tomato, chopped",
+        "2 tbsp pav bhaji masala",
+        "1 tsp red chili powder",
+        "1 tsp turmeric powder",
+        "4 pav buns",
+        "Butter (for serving)",
+        "Fresh cilantro, chopped",
+        "Salt to taste"
+       ],
+        instructions:{
+            Easy:["step 1: Boil/pressure cook and mash mixed veggies (potatoes, carrots, peas, cauliflower).","step 2: Sauté onions, tomatoes, spices (pav bhaji masala, chili, turmeric), and mashed veggies. Cook till soft.","step 3: Toast pav buns with butter. Serve with bhaji, cilantro, and lemon."],
+            Medium:["step 1: Boil or pressure cook mixed veggies (potatoes, carrots, peas, cauliflower) until soft, then mash them coarsely.","step 2: Heat oil, sauté onions until golden, add chopped tomatoes and spices (pav bhaji masala, red chili powder, turmeric, salt). Cook until tomatoes soften. Add the mashed veggies, adjust consistency with water, and cook for a few minutes.","step 3: Toast pav buns with butter. Serve bhaji with the buns, garnished with fresh cilantro and a slice of lemon."],
+            Hard:["step 1: Pressure cook or boil mixed veggies (potatoes, carrots, peas, cauliflower) until soft. Mash coarsely.","step 2: Sauté onions in oil, then add chopped tomatoes, spices (pav bhaji masala, chili powder, turmeric), and salt. Cook until tomatoes soften. Add mashed veggies, adjust consistency with water, and simmer for a few minutes.","step 3: Toast pav buns in butter until golden. Serve bhaji with the toasted pav, garnished with cilantro and lemon."],
+        }
+    },
+    "7":{
+        title:"Paapdi Chaat",
+        description:"Crunchy papdi, creamy dressing, spicy chutneys.",
+        image:"img9.png",
+        ingredients:[
+        "Papdi (crisp fried dough discs)",
+        "Boiled potatoes (chopped)",
+        "Boiled chickpeas or moong beans",
+        "Yogurt (whisked)",
+        "Tamarind chutney",
+        "Mint chutney",
+        "Chaat masala",
+        "Red chili powder",
+        "Cumin powder",
+        "Salt to taste",
+        "Fresh cilantro (chopped)",
+        "Pomegranate seeds (optional, for garnish)",
+        "Sev (crunchy gram flour noodles)"
+        ],
+        instructions:{
+            Easy:["step 1: Lay papdis on a plate, top with boiled potatoes and chickpeas or moong beans.","step 2: Drizzle tamarind and mint chutney, sprinkle chaat masala, red chili powder, cumin powder, and salt.","step 3: Add whisked yogurt, sev, fresh cilantro, and pomegranate seeds for extra flavor."],
+            Medium:["step 1: Arrange papdis on a plate, then layer with boiled and chopped potatoes and chickpeas or moong beans.","step 2: Drizzle tamarind and mint chutney over the papdi, then sprinkle chaat masala, red chili powder, cumin powder, and salt to taste.","step 3: Top with whisked yogurt, sev, fresh cilantro, and optional pomegranate seeds for added crunch and flavor."],
+            Hard:["step 1: Arrange papdis in a large plate. Layer them with boiled and chopped potatoes, boiled chickpeas or moong beans, and drizzle with a little tamarind chutney for tanginess.","step 2: Drizzle mint chutney for freshness, and sprinkle a mix of chaat masala, red chili powder, cumin powder, and salt evenly over the top. Adjust the spices as needed for your taste.","step 3: Top with well-whisked yogurt, crunchy sev, chopped fresh cilantro, and pomegranate seeds for garnish. Serve immediately to maintain the crispiness."],
+        }
+    },
+    "8":{
+        title:"Dabeli",
+        description:"Delicious filling, soft bun, perfect snack.",
+        image:"img10.png",
+        ingredients:[
+        "Pav (soft buns)",
+        "Boiled potatoes (mashed)",
+        "Dabeli masala powder",
+        "Tamarind chutney",
+        "Date chutney",
+        "Roasted peanuts (crushed)",
+        "Pomegranate seeds (optional)",
+        "Chopped onions",
+        "Chopped cilantro",
+        "Chili powder",
+        "Cumin powder",
+        "Salt to taste",
+        "Butter (for toasting pav)"
+        ],
+        instructions:{
+            Easy:["step 1: Mix mashed boiled potatoes with dabeli masala, tamarind chutney, date chutney, roasted peanuts, pomegranate seeds, and spices.","step 2: Slice pav buns, stuff with the potato filling, and sprinkle with chopped onions and cilantro.","step 3: Toast the stuffed pav with butter on a pan until crispy, then serve hot with extra chutney on the side."],
+            Medium:["step 1: In a bowl, mix mashed boiled potatoes with dabeli masala, tamarind chutney, date chutney, roasted peanuts, pomegranate seeds, and spices.","step 2: Slice the pav buns, stuff them with the prepared potato mixture, and garnish with chopped onions and cilantro.","step 3: Heat butter in a pan and toast the stuffed pav until crispy and golden. Serve hot with extra chutney on the side."],
+            Hard:["step 1: In a large bowl, mash boiled potatoes and mix with dabeli masala, tamarind chutney, date chutney, roasted peanuts, pomegranate seeds, chili powder, cumin powder, and salt. Blend everything well.","step 2: Slice the pav buns horizontally. Spread a layer of the potato filling on one half of the pav. Top with chopped onions, cilantro, and a bit more chutney if needed.","step 3: Heat butter in a pan and toast the stuffed pav on both sides until crispy and golden. Serve immediately with extra chutney or sev."],
+        }
+    },
+    "9":{
+        title:"Rasgulla",
+        description:"Sweet, spongy, syrup-drenched bite of heaven.",
+        image:"img22.png",
+        ingredients:[
+        "1 litre milk",
+        "1/4 cup curd",
+        "few icecubes",
+        "1 cup sugar",
+        "3 cups water",
+        "a generous pinch cardamom powder",
+        "5 nos pistachios for garnish"
+        ],
+        instructions:{
+            Easy:["step 1: Boil milk, add lemon juice/vinegar to curdle, and strain to separate the curds from whey. Rinse the curds with cold water.","step 2: Knead the chhena into a smooth dough.","step 3: Form small balls from the dough.","step 4: Boil water with sugar to make syrup. Drop the balls in and cook for 10-12 minutes until they double in size. Let them cool in the syrup."],
+            Medium:["step 1: Boil milk, add lemon juice or vinegar to curdle the milk, then strain the curds and rinse with cold water to remove the sourness.","step 2: Knead the chhena until smooth and free of lumps. Add a little water if needed.","step 3: Roll the dough into smooth balls, ensuring there are no cracks.","step 4: Boil water and sugar to make a syrup. Drop the balls in the syrup and cook for 10-15 minutes until they expand and become soft."],
+            Hard:["step 1: Boil milk, add lemon juice/vinegar to curdle it, then drain and rinse the curds under cold water. Squeeze out excess water and let it sit for 30 minutes.","step 2: Knead the chhena thoroughly for 10-15 minutes until smooth and soft, making sure there are no lumps.","step 3: Shape the dough into small, smooth balls, ensuring they are crack-free.","step 4: Boil water and sugar to make syrup. Drop the balls in, cook for 15-20 minutes on medium heat, and let them soak in the syrup for an hour."]
+        }
+    },
+    "10":{
+        title:"Rasmalai",
+        description:"Delicate, creamy, aromatic, syrup-soaked perfection.",
+        image:"img23.png",
+        ingredients:[
+        "2 litre milk",
+        "1/2 teaspoon saffron",
+        "1 tablespoon sliced,chopped pistachios",
+        "2 tablespoon water",
+        "1 1/2 litre boiling water",
+        "3 cup sugar",
+        "1 tablespoon sliced,chopped almonds",
+        "1/2 teaspoon powdered green cardamom",
+        "2 tablespoon lime juice"
+        ],
+        instructions:{
+            Easy:["step 1: Boil milk and reduce it to half. Add sugar and cardamom powder, and stir until sugar dissolves.","step 2: Gently squeeze out excess syrup from rasgullas and place them in a bowl.","step 3: Pour the prepared sweetened milk over the rasgullas and let them soak for 15-20 minutes.","step 4: Garnish with chopped pistachios or almonds. Serve chilled."],
+            Medium:["step 1: Boil milk and simmer until it reduces to half. Add sugar, cardamom powder, and condensed milk (optional) for extra richness.","step 2: Squeeze out excess syrup from rasgullas and place them in a shallow bowl.","step 3: Pour the reduced milk over the rasgullas, making sure they soak up the milk.","step 4: Garnish with chopped pistachios, almonds, and let it chill for 30 minutes before serving."],
+            Hard:["step 1: Boil milk, reduce to half, add sugar and cardamom powder, and simmer until thickened. Add rose water for fragrance.","step 2: Make soft, fresh rasgullas by curdling milk and kneading the chhena. Soak them in warm sugar syrup.","step 3: Place rasgullas in a serving dish, pour the thickened milk over them, and garnish with chopped pistachios/almonds."]
+        }
+    },
+    "11":{
+        title:"Gulabjam",
+        description:"Soft, rich, fragrant, indulgent sweet delight.",
+        image:"img24.png",
+        ingredients:[
+        "1 cup milk powder",
+        "1/4 cup all-purpose flour (maida)",
+        "2 tbsp ghee (clarified butter)",
+        "1/4 tsp baking soda",
+        "1/4 cup milk (adjust as needed)",
+        "Ghee or oil (for deep frying)",
+        "1 cup sugar",
+        "1 cup water",
+        "1/4 tsp cardamom powder",
+        "A few saffron strands (optional)",
+        "Rose water or kewra water (optional, for flavor)"
+        ],
+        instructions:{
+            Easy:["step 1: Mix milk powder, flour, ghee, and baking soda. Add milk little by little to form a soft dough.","step 2: Roll the dough into small smooth balls, ensuring no cracks.","step 3: Boil water and sugar to make a syrup, add cardamom powder, and let it cool slightly.","step 4: Heat ghee/oil and fry the balls on low heat until golden. Soak them in warm syrup for 30 minutes."],
+            Medium:["step 1: Mix milk powder, flour, ghee, baking soda, and a little milk to form a soft, smooth dough. Let it rest for 10 minutes.","step 2: Boil sugar and water with cardamom powder to make a sticky syrup, then let it cool.","step 3: Roll dough into smooth balls, fry them gently in ghee or oil until golden, then soak them in warm syrup for 30 minutes."],
+            Hard:["step 1: Mix milk powder, flour, semolina, baking soda, and ghee. Gradually add warm milk to form a smooth dough. Rest the dough for 10-15 minutes.","step 2: Boil sugar, water, and cardamom powder to make a thick syrup. Add rose or kewra water for extra flavor and let it cool.","step 3: Roll dough into smooth balls and fry them on low heat until golden. Soak them in warm syrup for 30-45 minutes to absorb the sweetness."]
+        }
+    },
+    "12":{
+        title:"Ghevar",
+        description:"Crispy layers, sweet syrup, festive indulgence.",
+        image:"img25.png",
+        ingredients:[
+        "1 cup all-purpose flour",
+        "1/4 cup ghee",
+        "1/4 cup cold water",
+        "1/2 cup chilled milk",
+        "1/4 tsp baking soda",
+        "Sugar syrup (1 cup sugar + 1 cup water)",
+        "Chopped pistachios and almonds for garnish",
+        "Ghee for frying"
+        ],
+        instructions:{
+            Easy:["step 1: Mix flour, ghee, baking soda, and chilled milk. Gradually add cold water to make a smooth batter.","step 2: Heat ghee in a pan or wok, and keep it hot but not smoking.","step 3: Pour the batter in a circular motion to form a disc. Fry until golden and crisp.","step 4: Dip the fried Ghevar into warm sugar syrup for a few seconds. Garnish with chopped nuts."],
+            Medium:["step 1: Mix flour, baking soda, cardamom powder, ghee, and milk to form a smooth batter. Add cold water gradually to get the right consistency.","step 2: Boil sugar and water until it thickens slightly, then let it cool.","step 3: Heat ghee in a deep pan. Pour the batter into the ghee, forming circular layers. Fry until golden and crispy.","step 4: Soak the fried Ghevar in warm sugar syrup for a few seconds. Garnish with chopped pistachios and almonds."],
+            Hard:["step 1: Mix flour, semolina, baking soda, ghee, and milk. Add cold water gradually to form a smooth batter with the right consistency. Let it rest for 10 minutes.","step 2: Boil sugar and water until it slightly thickens, then cool it to room temperature.","step 3: Heat ghee in a deep pan, pour the batter in circular layers, and fry until golden. Soak the fried Ghevar in warm sugar syrup for a few seconds and garnish with nuts."]
+        }
+    },
+    "13":{
+        title:"Chocolate Brownie",
+        description:"Fudgy, chocolatey, warm, comforting dessert joy,",
+        image:"img26.png",
+        ingredients:[
+        "1 cup all-purpose flour (maida)",
+        "1/2 cup cocoa powder (unsweetened)",
+        "1/2 tsp baking powder",
+        "1/4 tsp salt",
+        "1/2 cup unsalted butter (melted) or vegetable oil",
+        "3/4 cup sugar (adjust to taste)",
+        "1/2 cup milk (dairy or plant-based)",
+        "1 tsp vanilla extract",
+        "1/2 cup chopped walnuts or chocolate chips (optional)",
+        "1/4 cup water (if needed, for adjusting consistency)"
+        ],
+        instructions:{
+            Easy:["step 1: Preheat to 350°F (175°C) and grease a 9x9-inch pan.","step 2: Sift 1 cup flour, 1/2 cup cocoa, 1/2 tsp baking powder, and 1/4 tsp salt.","step 3: Whisk 1/2 cup melted butter, 1/2 cup milk, 1 tsp vanilla, and 1/4 cup yogurt.","step 4: Fold dry ingredients into wet, pour into pan, and bake for 30-35 minutes."],
+            Medium:["step 1: In a bowl, sift 1 cup flour, 1/2 cup cocoa powder, 1/2 tsp baking powder, and 1/4 tsp salt.","step 2: In another bowl, whisk together 1/2 cup melted butter (or oil), 3/4 cup sugar, 1/2 cup milk, and 1 tsp vanilla.","step 3: Add the wet mixture to the dry ingredients and mix until smooth. Fold in optional nuts or chocolate chips.","step 4: Pour the batter into a greased pan and bake at 350°F (175°C) for 20-25 minutes or until a toothpick comes out clean."],
+            Hard:["step 1: In a bowl, sift together 1 cup all-purpose flour, 1/2 cup cocoa powder, 1/2 tsp baking powder, and 1/4 tsp salt.","step 2: In another bowl, whisk 1/2 cup melted butter (or oil), 3/4 cup sugar, 1/2 cup milk, and 1 tsp vanilla extract.","step 3: Gradually add the dry ingredients to the wet ingredients, mixing until smooth. Optionally, fold in 1/2 cup chocolate chips or chopped walnuts.","step 4: Pour the batter into a greased baking pan and bake at 350°F (175°C) for 20-25 minutes. Let cool before slicing."],
+        }
+    },
+    "14":{
+        title:"Mango Icecream",
+        description:"Smooth, creamy, tropical mango blissful treat.",
+        image:"img27.png",
+        ingredients:[
+        "2 cups ripe mango puree (about 2 large mangoes)",
+        "1 cup heavy cream",
+        "1/2 cup sweetened condensed milk",
+        "1/2 cup milk",
+        "1 tsp vanilla "
+        ],
+        instructions:{
+            Easy:["step 1: Puree 2 cups of ripe mangoes until smooth.","step 2: Combine mango puree, 1 cup heavy cream, 1/2 cup sweetened condensed milk, 1/2 cup milk, and vanilla.","step 3: Pour into a container and freeze for 6-8 hours or overnight, then enjoy!"],
+            Medium:["step 1: Blend 2 cups of ripe mangoes into a smooth puree. You can strain it for a smoother texture.","step 2: In a bowl, whisk together 1 cup heavy cream, 1/2 cup sweetened condensed milk, 1/2 cup milk, and 1 tsp vanilla extract until well combined.","step 3: Gently fold the mango puree into the cream mixture, pour into a container, and freeze for 6-8 hours or until firm."],
+            Hard:["step 1: Peel and chop 2 ripe mangoes, blend them until smooth, and strain the puree to remove fibers for a silky texture.","step 2: In a chilled bowl, whip 1 cup heavy cream until soft peaks form. Then, gently fold in 1/2 cup sweetened condensed milk, 1/2 cup milk, and 1 tsp vanilla.","step 3: Slowly fold the mango puree into the whipped cream mixture, pour into an airtight container, and freeze for 6-8 hours, stirring once after 3 hours for a smoother texture."]
+        }
+    },
+    "15":{
+        title:"Banana Pudding",
+        description:"A creamy dessert with vanilla pudding, bananas, and Nilla wafers.",
+        image:"img28.png",
+        ingredients:[
+        "2 ripe bananas, mashed",
+        "2 cups whole milk (or non-dairy milk like almond or oat milk)",
+        "1/2 cup sugar",
+        "3 tbsp cornstarch",
+        "1/2 tsp vanilla extract",
+        "1 1/2 cups whipped cream or whipped coconut cream (for eggless version)",
+        "1 box vanilla wafer cookies (or other cookies of choice)",
+        "A pinch of salt"
+        ],
+        instructions:{
+            Easy:["step 1: In a dish, layer vanilla wafers, sliced bananas, and a few spoonfuls of pudding mix.","step 2: Prepare instant vanilla pudding as per package instructions and pour over the layered ingredients.","step 3: Refrigerate for a few hours, then top with whipped cream before serving"],
+            Medium:["step 1: In a serving dish, layer vanilla wafers, sliced bananas, and a portion of pudding.","step 2: Make instant vanilla pudding as per package directions and pour it over the wafer and banana layers.","step 3: Refrigerate for a few hours to set, then top with whipped cream or more crushed wafers before serving."],
+            Hard:["step 1: In a deep dish, arrange a layer of vanilla wafers, followed by sliced bananas. Repeat until you fill the dish.","step 2: Prepare the vanilla pudding from scratch or use instant pudding mix, following the instructions carefully. Pour the pudding mixture over the layers, making sure it covers evenly.","step 3: Refrigerate for at least 4 hours or overnight. Before serving, top with whipped cream, crushed vanilla wafers, and a few banana slices for garnish."],
+        }
+    },
+    "16":{
+        title:"Calamansi Muffins",
+        description:"Delicious calamansi muffins with a burst of refreshing citrus flavor.",
+        image:"img29.png",
+        ingredients:[
+        "1 1/2 cups all-purpose flour",
+        "1 tsp baking powder",
+        "1/4 tsp salt",
+        "1/4 cup whole milk (or non-dairy milk for eggless)",
+        "1/4 cup calamansi juice (about 4-5 calamansi)",
+        "1/2 cup butter (softened)",
+        "1 cup white sugar",
+        "1 tsp vanilla"
+        ],
+        instructions:{
+            Easy:["step 1: Combine flour, baking powder, baking soda, sugar, and salt in a bowl.","step 2: In another bowl, mix calamansi juice, zest, milk, oil, vanilla, and yogurt.","step 3: Add wet ingredients to dry ingredients, mix well, pour into muffin tins, and bake until golden."],
+            Medium:["step 1: Combine 1 tbsp chia or flax seeds with 3 tbsp water, let sit for 5 minutes to thicken.","step 2: Sift together flour, almond flour, sugar, baking powder, baking soda, and spices. In a separate bowl, mix calamansi juice, zest, yogurt, vanilla, and chia/flax egg. Cut cold butter into the dry mix until crumbly.","step 3: Gently fold wet into dry ingredients, don’t overmix. Spoon batter into muffin tray and bake at 350°F (175°C) for 22-25 minutes, until golden and a toothpick comes out clean."],
+            Hard:["step 1: In a mixing bowl, whisk together the flour, sugar, baking powder, baking soda, and salt. Set it aside.","step 2: In another bowl, combine the vegetable oil, calamansi juice, vanilla extract, and non-dairy milk. Stir in the calamansi zest.","step 3: Gently fold the wet ingredients into the dry ingredients until just combined (don't overmix!). Spoon the batter into a lined muffin tray, filling each cup about 2/3 full. Bake in a preheated oven at 350°F (175°C) for 18-20 minutes, or until a toothpick inserted into the center comes out clean."]
+            
+        }
+    }
+};
+
+// Function to display the selected recip.
+function displayRecipe() {
+    const recipeId = getUrlParameter('id');
+    const recipe = recipes[recipeId];
+    if (recipe) {
+        document.getElementById('recipe-content').innerHTML = `
+            <h3 class="recipe-title">${recipe.title}</h3>
+            <p class="text-muted">${recipe.description}</p>
+        `;
+        document.getElementById('recipe-ingredients').innerHTML = recipe.ingredients.map(item => `<li class="ingredient-item">${item}</li>`).join('');
+        document.getElementById('recipe-steps').innerHTML = recipe.instructions.Easy.map(item => `<li class="step-item">${item}</li>`).join('');
+        document.getElementById('recipe-image').src = recipe.image;
+    } else {
+        document.getElementById('recipe-content').innerHTML = "<p>Recipe not found!</p>";
+    }
+}
+
+// Function to select the difficulty and show the instructions
+function selectDifficulty(difficulty) {
+    const recipeId = getUrlParameter('id');
+    const recipe = recipes[recipeId];
+    
+    if (recipe) {
+        document.getElementById('recipe-steps').innerHTML = recipe.instructions[difficulty].map(item => `<li class="step-item">${item}</li>`).join('');
+    }
+    
+    // Close the dropdown after selection
+    document.getElementById('difficulty-dropdown').style.display = 'none';
+    document.getElementById('search-input').value = difficulty; // Set the selected difficulty in the search input
+}
+
+// Show the difficulty dropdown when the input is focused
+function showDifficultyDropdown() {
+    document.getElementById('difficulty-dropdown').style.display = 'block';
+}
+
+// Hide the difficulty dropdown when the input is blurred
+function hideDifficultyDropdown() {
+    setTimeout(() => {
+        document.getElementById('difficulty-dropdown').style.display = 'none';
+    }, 200);
+}
+
+// Run the function to display the recipe when the page loads
+window.onload = displayRecipe;
+</script>
+
+</body>
+</html>

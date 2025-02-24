@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cooking Blog</title>
+    <link rel="icon" href="logo.png" type="image/png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg ">
+  <div class="container">
+    <!-- Left side: Recipe Share Name -->
+    <a class="navbar-brand" href="#"><span class="letter">Flavora</a>
+    
+    <!-- Toggle Button for Mobile View -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Middle and Right side: Navbar Items and Search -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mx-auto"> <!-- Centering the nav items -->
+        <li class="nav-item">
+          <a class="nav-link active" href="#">HOME</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" href="#">ABOUT</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="#">CONTACT</a>
+          </li>
+        <li class="nav-item">
+            <a class="nav-link" href="upload.html">SUBMIT</a>
+        </li>
+      </ul>
+
+      <!-- Right side: Search Bar -->
+        <div class="d-flex">
+            <div class="input-group" id="search-group">
+                <input class="form-control" type="search" placeholder="Search.." aria-label="Search" id="search-input" onfocus="showDifficultyDropdown()" onblur="hideDifficultyDropdown()">
+                <!--<button class="btn btn-outline-success" type="submit"><i class="fas fa-search"></button>-->
+            </div> 
+            <div class="dropdown-menu" id="difficulty-dropdown" style="display:none; position:absolute; width:100%; z-index: 10;">
+                <a class="dropdown-item" href="#" onclick="selectDifficulty('Easy')">Easy</a>
+                <a class="dropdown-item" href="#" onclick="selectDifficulty('Medium')">Medium</a>
+                <a class="dropdown-item" href="#" onclick="selectDifficulty('Hard')">Hard</a>
+            </div> 
+        </div> 
+      </div>
+    </div>
+    </nav> 
+
+<!-- Main Content Section -->
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-6">
+            <h1 class="headline mb-4">Flavors that Inspire</h1> 
+            <p class="lead mb-4">Let every bite tell a story of taste and tradition, 
+                a journey through flavors, 
+                where every flavor tells a tale, 
+                rich with memories that linger, 
+                and a passion that lasts forever.<p>
+             <button class="btn btn-outline-primary">Share Recipe</button>
+        </div>
+        <div class="col-lg-6">
+            <img src="img4.jpg" style="width:100%;height:370px" class="rounded"  alt="hh">
+       </div>
+    </div>
+</div>
+
+<!--varieties-->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-2">
+              <div class="card ">
+                  <img src="img12.png" class="card-img-top img-thumbnail" style="height:130px">
+              </div> 
+              <h5 class="text-center">Maharashtrian</h5>
+        </div>
+        <div class="col-lg-2">
+            <div class="card">
+                <img src="img13.png" class="card-img-top img-thumbnail" style="height:130px">
+            </div> 
+            <h5 class="text-center">South Indian</h5>
+        </div>
+        <div class="col-lg-2">
+            <div class="card">
+                <img src="img14.png" class="card-img-top img-thumbnail" style="height:130px">
+            </div> 
+            <h5 class="text-center">Rajastani</h5>
+        </div>
+        <div class="col-lg-2">
+            <div class="card">
+                <img src="img15.png" class="card-img-top img-thumbnail" style="height:130px">
+            </div> 
+            <h5 class="text-center">Punjabi</h5>
+        </div>
+        <div class="col-lg-2">
+            <div class="card">
+                <img src="img30.jpg" class="card-img-top img-thumbnail" style="height:130px">
+            </div> 
+            <h5 class="text-center">Gujarati</h5>
+        </div>
+        <div class="col-lg-2">
+            <div class="card">
+                <img src="img31.png" class="card-img-top img-thumbnail" style="height:130px">
+            </div> 
+            <h5 class="text-center">Bengali</h5>
+        </div>
+    </div>
+</div>
+<br>
+
+<!--Latest Recipe-->
+<div class="container">
+    <h2>Latest Recipes</h2>
+    <div class="row">
+        <div class="col-lg-3 mb-4">
+            <a href="recipe.html?id=1">
+              <div class="card  latest-card" >
+                <img src="img16.png"  style="height:210px">
+                <h6 class="recipe-name">Aloo Paratha</h6>
+              </div>
+            </a>
+            <!--<h6 class="recipe-name">Aloo Paratha</h6>-->
+        </div>
+        <div class="col-lg-3 mb-4">
+            <a href="recipe.html?id=2">
+              <div class="card  latest-card">
+                <img src="img21.png" style="height:210px">
+                <h6 class="recipe-name">Daal Bati Churma</h6>
+              </div>
+            </a>  
+        </div>
+        <div class="col-lg-3 mb-4">
+            <a href="recipe.html?id=3">
+               <div class="card  latest-card">
+                  <img src="img18.png" style="height:210px">
+                  <h6 class="recipe-name">Dahi Vada</h6>
+               </div>
+            </a>   
+        </div>
+        <div class="col-lg-3 mb-4">
+            <a href="recipe.html?id=4">
+               <div class="card latest-card">
+                   <img src="img20.jpg" style="height:210px">
+                   <h6 class="recipe-name">Appe</h6>
+               </div>
+            </a>   
+        </div>
+    </div>
+</div>
+
+<!--Spicy Recipes-->
+<div class="container">
+    <h2>Spicy Recipes</h2>
+    <div class="row">
+        <div class="col-lg-3 mb-4">
+            <a href="recipe.html?id=5">
+                <div class="card spicy-card">
+                    <img src="img7.png" style="height:240px">
+                    <h6 class="recipe-name">Chole Bhature</h6>
+                </div>
+            </a>    
+        </div>
+        <div class="col-lg-3 mb-4">
+            <a href="recipe.html?id=6">
+                <div class="card spicy-card">
+                     <img src="img8.png" style="height:240px">
+                     <h6 class="recipe-name">Paav Bhaji</h6>
+                </div>
+            </a>    
+        </div>
+        <div class="col-lg-3 mb-4">
+            <a href="recipe.html?id=7">
+                <div class="card spicy-card">
+                    <img src="img9.png" style="height:240px">
+                    <h6 class="recipe-name">Paapdi Chaat</h6>
+                </div>
+            </a>    
+        </div>
+        <div class="col-lg-3 mb-4">
+            <a href="recipe.html?id=8">
+                <div class="card spicy-card">
+                    <img src="img10.png" style="height:240px">
+                    <h6 class="recipe-name">Dabeli</h6>
+                </div>
+            </a>    
+        </div>
+    </div>
+</div>
+<br>
+
+<!--Sweet Recipes-->
+<div class="container">
+    <h2>Sweet Recipes</h2>
+    <div class="row">
+        <div class="col-lg-3 mb-4">
+            <a href="recipe.html?id=9">
+               <div class="card sweet-recipe">
+                    <img src="img22.png" style="height:240px">
+                    <h6 class="recipe-name">Rasgulla</h6>
+               </div>
+            </a>   
+        </div>
+        <div class="col-lg-3 mb-4">
+            <a href="recipe.html?id=10">
+                <div class="card sweet-recipe">
+                    <img src="img23.png" style="height:240px">
+                    <h6 class="recipe-name">Rasmalai</h6>
+                </div>
+            </a>    
+        </div>
+        <div class="col-lg-3 mb-4">
+            <a href="recipe.html?id=11">
+                <div class="card sweet-recipe">
+                    <img src="img24.png" style="height:240px">
+                    <h6 class="recipe-name">Gulabjam</h6>
+                </div>
+            </a>    
+        </div>
+        <div class="col-lg-3 mb-4">
+            <a href="recipe.html?id=12">
+                <div class="card sweet-recipe">
+                    <img src="img25.png" style="height:240px">
+                    <h6 class="recipe-name">Ghevar</h6>
+                </div>
+            </a>    
+        </div>
+    </div>
+</div>
+<br>
+
+<!--Dessert Recipes-->
+<div class="container">
+    <h2>Dessert Recipes</h2>
+    <div class="row">
+        <div class="col-lg-3 mb-4">
+            <a href="recipe.html?id=13">
+                <div class="card dessert-recipe">
+                    <img src="img26.png" style="height:240px">
+                    <h6 class="recipe-name">Chocolate Brownie</h6>
+                </div>
+            </a>    
+        </div>
+        <div class="col-lg-3 mb-4">
+            <a href="recipe.html?id=14">
+                <div class="card dessert-recipe">
+                    <img src="img27.png" style="height:240px">
+                    <h6 class="recipe-name">Mango Icecream</h6>
+                </div>
+            </a>    
+        </div>
+        <div class="col-lg-3 mb-4">
+            <a href="recipe.html?id=15">
+                <div class="card dessert-recipe">
+                    <img src="img28.png" style="height:240px">
+                    <h6 class="recipe-name">Banana Pudding</h6>
+                </div>
+            </a>    
+        </div>
+        <div class="col-lg-3 mb-4">
+            <a href="recipe.html?id=16">
+                <div class="card dessert-recipe">
+                    <img src="img29.png" style="height:240px">
+                    <h6 class="recipe-name">Calamansi Muffins</h6>
+                </div>
+            </a>    
+        </div>
+    </div>
+</div>
+<br>
+<br>
+<!--About-->
+<div class="container bg-light p-3">
+    
+    <div class="row">
+        <div class="col-lg-4 mb-2">
+            <div class="card1 shadow"> 
+              <h6 class="p-2" style="letter-spacing: 1px;height: 345px;">
+                <p class="text-center text-muted">In every pot, a story brews,<br>
+    With every spice, a world to choose.<br>
+    From humble grains to vibrant greens,<br>
+    A harmony of tastes, pure bliss.<br>
+    Each dish a memory, each bite a dream,<br>
+    Brought together in a perfect theme.<br>
+    Through every meal, we share and grow,<br>
+    With every recipe, new seeds we sow,<br>
+    Creating moments that forever flow.</p>
+               <br>
+               <button class="btn btn-secondary" style="margin-left: 29%;">Learn More</button>
+              </h6>
+            </div>
+        </div>
+        <div class="col-lg-4 mb-2">
+           <div class="card1 shadow"> 
+                <img src="img32.png" style="width:100%;height:347px" >
+            </div>    
+        </div>
+        <div class="col-lg-4 mb-2">
+            <div class="card1 shadow"> 
+                 <img src="img33.png" style="width:100%;height:347px" >
+             </div>    
+         </div>
+    </div>
+</div>
+<br>
+
+
+<!---->
+<div class="container shadow py-3">
+    <div class="row">
+        <div class="col-lg">
+            <h2 class="text-center">Submit Your Recipe</h2>
+            <p class="text-center">Share your delicious recipes with our community! We’d love to feature your cooking skills.</p>
+        </div>
+    </div>
+    <div class="row">
+        <a href="upload.html" class="btn btn-danger" style="margin: auto;width: fit-content;" id="showFormButton">Submit recipe</a>
+    </div>
+</div>
+<br>
+
+<!-- Footer -->
+<footer class="bg-dark text-white pt-5 pb-3 shadow">
+    <div class="container">
+        <div class="row">
+            <!-- Left Column: Food Icon & Social Media Icons -->
+            <div class="col-lg-4 mb-4 text-center text-md-left">
+                <!-- Food Icon -->
+                <div>
+                    <a  href="#" class="logo-footer">Flavora</a>
+                </div>
+                <!-- Social Media Icons -->
+                <div class="mt-3">
+                    <a href="#" class="text-white mr-3 social-icon"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="text-white mr-3 social-icon"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-white mr-3 social-icon"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-white mr-3 social-icon"><i class="fab fa-pinterest"></i></a>
+                </div>
+            </div>
+
+            <!-- Right Column: Content (2 columns on Desktop, Stacked on Mobile) -->
+            
+               
+                    <!-- Left Column Content -->
+                    <div class="col-lg-4 mb-4 text-center text-md-left">
+                        <h5>About</h5>
+                        <ul class="list-unstyled">
+                            <li><a href="#" class="text-white">Blog</a></li>
+                            <li><a href="#" class="text-white">Recipe Index</a></li>
+                            <li><a href="#" class="text-white">Blogging Resources</a></li>
+                            <li><a href="#" class="text-white">Income Reports</a></li>
+                            <li><a href="#" class="text-white">Sponsored Content</a></li>
+                            <li><a href="#" class="text-white">Media Mentions</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Right Column Content -->
+                    <div class="col-lg-4 mb-4 text-center text-md-left">
+                        <h5>Food & Recipes</h5>
+                        <ul class="list-unstyled">
+                            <li><a href="#" class="text-white">Sugar Free January</a></li>
+                            <li><a href="#" class="text-white">Freezer Meals 101</a></li>
+                            <li><a href="#" class="text-white">Quick and Easy Recipes</a></li>
+                            <li><a href="#" class="text-white">Instant Pot Recipes</a></li>
+                            <li><a href="#" class="text-white">Pasta Recipes</a></li>
+                            <li><a href="#" class="text-white">Vegan Recipes</a></li>
+                        </ul>
+                    </div>
+            
+            </div>
+        </div>
+
+        <!-- Copyright -->
+        <div class="row">
+            <div class="col text-center mt-4">
+                <p>&copy; 2025 Flavora. All Rights Reserved.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- End Footer -->
+
+
+
+
+<script src="app.js" ></script>
+</body>
+</html>

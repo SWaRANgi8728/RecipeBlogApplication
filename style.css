@@ -1,0 +1,288 @@
+.navbar-brand {
+    font-family: 'Arial', sans-serif; 
+    font-size: 32px;  
+    font-weight: bold;  
+    color:  #FFC107;/*#FFEB3B;*/
+    letter-spacing: 2px;  
+    text-transform: uppercase;  
+    transition: color 0.3s ease;  
+    /*text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); */
+    text-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
+    
+  }
+  
+  .navbar-brand:hover {
+    color:  #FF7043 ; 
+  }
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.navbar-nav .nav-link {
+    font-size: 1.1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    color:black ;
+    
+}
+.navbar-toggler {
+    border: none;
+}
+
+/* Search Bar Styling */
+.d-flex .input-group {
+    position: relative;
+}
+
+.d-flex input {
+    max-width: 250px;
+   /* border-radius: 25px;*/
+    padding-right: 40px; 
+}
+/* Mobile-Friendly Adjustments */
+@media (max-width: 768px) {
+    .navbar-nav {
+        /*text-align: center;*/
+        padding-top: 10px;
+    }
+
+    .d-flex {
+        margin-top: 10px;
+        justify-content: center;
+    }
+
+    .d-flex .input-group {
+        width: 100%;
+    }
+
+    .d-flex input {
+        max-width: 100%;
+        /*border-radius: 25px;*/
+    }
+
+    .d-flex button {
+        padding: 10px;
+    }
+}
+.card:hover {
+    transform: scale(1.05); /* Slightly zoom in on hover */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+  }
+
+  .card .recipe:hover{
+    transform: scale(1.05); /* Slightly zoom in on hover */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+  }
+
+  #contact {
+    /*background-color: #f9f9f9;*/
+    border-radius: 10px;
+    padding: 40px;
+}
+
+form {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+h2 {
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    color: #333;
+}
+
+footer a {
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+footer a:hover {
+    color: #f8a5c2;
+}
+
+footer .fab {
+    font-size: 20px;
+}
+.logo-footer {
+    font-family: 'Arial', sans-serif;
+    font-size: 36px;  /* Larger font size for visibility */
+    font-weight: bold;
+    color: #FFEB3B;  /* Bright golden yellow for logo */
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.logo-footer:hover {
+    color: #FF7043;  
+}
+.social-icon {
+    font-size: 30px;  /* Increases icon size */
+    transition: color 0.3s ease;
+}
+
+/* Adjust spacing between icons */
+.social-icon + .social-icon {
+    margin-left: 20px;  /* Increase spacing between icons */
+}
+
+/* Optional: Change icon color on hover */
+.social-icon:hover {
+    color: #FF6F61;  /* Add hover color for icons (soft coral as an example) */
+}
+
+
+.headline {
+    font-family: 'Poppins', sans-serif; /* Clean and modern sans-serif font */
+    font-size: 42px; /* Large heading for impact */
+    font-weight: 600;
+    color: coral; /* Bright, vibrant blue color */
+    text-align: left; /* Align to the left */
+    letter-spacing: 2px; /* Slight letter spacing for a modern look */
+    text-transform: capitalize; /* Capitalize for visual appeal */
+    line-height: 1.3; /* Adds space between lines */
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15); /* Soft shadow for depth */
+}
+
+/* Optional: Styling for the paragraph */
+.lead {
+    font-size: 20px;
+    font-weight: 400;
+    color: #555;
+    letter-spacing: 2px;
+}
+
+/* Button Styling */
+.btn-outline-info {
+    font-size: 16px;
+    padding: 12px 24px;
+    font-weight: 500;
+    border-radius: 30px; /* Rounded edges */
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Hover effect for the button */
+.btn-outline-info:hover {
+    background-color: #0277BD;
+    color: white;
+    border-color: #0277BD;
+}
+
+.latest-card{
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow for a modern look */
+    transition: box-shadow 0.3s ease; /* Smooth shadow transition */
+    position: relative;
+}
+
+.rounded {
+    width: 100%; 
+    height: 370px;
+    object-fit: cover; /* Ensures the image covers the container without distortion */
+    border-radius: 15px; /* Rounded corners for the image */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Soft shadow around the image */
+    /*transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effect */
+    
+}
+
+/* Hover Effect on Image */
+.rounded:hover {
+    transform: scale(1.05); /* Slight zoom effect */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+}
+
+/* Text Effect for Latest Recipes heading */
+h2 {
+    font-family: 'Arial', sans-serif;
+    font-size: 2.5rem; /* Larger size for emphasis */
+    background: linear-gradient(90deg, #f06, #48c6ef); /* Gradient effect */
+    -webkit-background-clip: text; /* Clip the background to the text */
+    color: transparent; /* Make the text color transparent to show the gradient */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Subtle initial shadow */
+    animation: gradient-text 3s ease infinite; /* Add animation */
+    transition: color 0.3s ease; /* Smooth color change on hover */
+}
+
+/* Hover Effect for Heading - Only Color Change */
+h2:hover {
+    color: #f06; /* Change text color on hover */
+}
+
+/* Recipe name block styling inside cards */
+.recipe-name {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 1.25rem; /* Slightly larger size for emphasis */
+    font-weight: 700; /* Bold text for prominence */
+    text-align: center;
+    color: #fff; /* White text color for contrast */
+    padding: 15px;
+    background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black background for contrast */
+    position: absolute; /* Position at the bottom */
+    bottom: 0;
+    width: 100%; /* Full width */
+    left: 0;
+    border-radius: 0 0 15px 15px; /* Rounded bottom corners */
+    transition: all 0.3s ease; /* Smooth transition on hover */
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3); /* Subtle shadow above the name block */
+    text-transform: uppercase; /* Make text uppercase */
+}
+
+/* Hover effect for recipe names - Change text color on hover */
+.recipe-name:hover {
+    background-color: #fff;
+    color: #333; /* Dark text color on hover for contrast */
+    transform: translateY(-2px); /* Slight upward movement on hover */
+}
+
+/* Animation for the gradient text */
+@keyframes gradient-text {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.spicy-card{
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    transition: box-shadow 0.3s ease; 
+    position: relative;
+}
+.sweet-recipe{
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    transition: box-shadow 0.3s ease; 
+    position: relative;
+}
+.dessert-recipe{
+border-radius: 15px;
+overflow: hidden;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+transition: box-shadow 0.3s ease; 
+position: relative;
+}
+
+h5 {
+    font-size: 18px;
+    font-weight: bold;
+    transition: color 0.3s ease; /* Smooth color transition */
+    text-transform: uppercase;
+  }
+  
+  h5:hover {
+    color: #ff5833c3; /* Change color on hover */
+    cursor: pointer; /* Show pointer cursor on hover */
+  }
