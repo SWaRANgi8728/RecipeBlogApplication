@@ -2,6 +2,7 @@ document.getElementById('recipeForm').addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const formData = new FormData();
+    formData.append('name', document.getElementById('name').value);
     formData.append('title', document.getElementById('title').value);
     formData.append('cuisine', document.getElementById('cuisine').value);
     formData.append('difficulty', document.getElementById('difficulty').value);
@@ -17,6 +18,7 @@ document.getElementById('recipeForm').addEventListener('submit', async (e) => {
 
         if (response.ok) {
             alert('Recipe uploaded successfully!');
+            window.location.href = 'recipelist.html';
             document.getElementById('recipeForm').reset();
         } else {
             alert('Failed to upload recipe!');
@@ -36,19 +38,19 @@ document.getElementById('searchBtn').addEventListener('click', async () => {
     let html = '';
     recipes.forEach(recipe => {
         html += `
-            <div class="card mb-3">
+           
+           <div class="card mb-3">
                 <img src="/uploads/${recipe.image}" class="card-img-top" alt="${recipe.title}">
                 <div class="card-body">
                     <h5 class="card-title">${recipe.title}</h5>
                     <p class="card-text">${recipe.cuisine} | Difficulty: ${recipe.difficulty}</p>
                 </div>
             </div>
+          
         `;
     });
     document.getElementById('recipeResults').innerHTML = html;
 });
-
-
 
 // Show the dropdown when the search input is focused
 function showDifficultyDropdown() {
@@ -73,3 +75,5 @@ function selectDifficulty(difficulty) {
     // Hide the dropdown after selecting
     hideDifficultyDropdown();
 }
+
+

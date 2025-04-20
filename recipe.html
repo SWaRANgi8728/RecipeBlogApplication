@@ -4,29 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cooking Blog</title>
-    <link rel="icon" href="logo.png" type="image/png">
+    <link rel="icon" href="logo.jpg" type="image/jpg">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <style>
         .recipe-details{
             margin-left: 5%;
         }
         .recipe-title {
-            color: #FF4500; /* Change text color on hover (Tomato red) */
+            color: #FF4500; 
             text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); 
     font-size: 2rem;
     font-weight: bold;
     text-transform: uppercase;
-    /*transition: color 0.3s ease, text-shadow 0.3s ease, transform 0.3s ease; /* Smooth transitions for color, shadow, and scale */
-}
+    }
 
 .recipe-title:hover {
     color: #FF4500; 
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3), 0 0 25px #FF4500, 0 0 5px #FF4500; /* Glowing effect */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3), 0 0 25px #FF4500, 0 0 5px #FF4500; 
 }
 p{
     font-size: 1.2rem;
+}
+.recipe-image {
+  height: 570px;
+  object-fit: cover;
 }
 
     </style>
@@ -93,6 +97,26 @@ p{
                 <!-- Steps will be inserted here using JS -->
             </ul>
         </div>
+
+        <div class="recipe-actions">
+            <button class="action-btn" onclick="likeRecipe()">
+                <i class="fas fa-thumbs-up"></i> <span id="like-count">0</span>
+            </button>            
+            <button class="action-btn" onclick="toggleCommentBox()">
+                <i class="fas fa-comment-alt"></i>  <span id="comment-count"></span>
+            </button>
+            <button class="action-btn" onclick="followRecipe()" id="follow-button">
+                <i class="fas fa-user-plus"></i> Follow
+            </button>
+        </div>
+        
+        <!-- Comment Section -->
+        <div id="comment-section" style="display: none;">
+            <textarea id="comment-input" placeholder="Write your comment here..."></textarea>
+            <button class="btn btn-primary" onclick="postComment()">Post Comment</button>
+            <ul id="comments-list"></ul>
+        </div>
+        
     </div>
 </div>
 
@@ -452,22 +476,31 @@ const recipes = {
     }
 };
 
-// Function to display the selected recip.
 function displayRecipe() {
     const recipeId = getUrlParameter('id');
     const recipe = recipes[recipeId];
+
     if (recipe) {
         document.getElementById('recipe-content').innerHTML = `
             <h3 class="recipe-title">${recipe.title}</h3>
             <p class="text-muted">${recipe.description}</p>
         `;
-        document.getElementById('recipe-ingredients').innerHTML = recipe.ingredients.map(item => `<li class="ingredient-item">${item}</li>`).join('');
-        document.getElementById('recipe-steps').innerHTML = recipe.instructions.Easy.map(item => `<li class="step-item">${item}</li>`).join('');
+        document.getElementById('recipe-ingredients').innerHTML = recipe.ingredients
+            .map(item => `<li class="ingredient-item">${item}</li>`)
+            .join('');
+        document.getElementById('recipe-steps').innerHTML = recipe.instructions.Easy
+            .map(item => `<li class="step-item">${item}</li>`)
+            .join('');
         document.getElementById('recipe-image').src = recipe.image;
+        document.getElementById('recipe-image').alt = recipe.title;
     } else {
         document.getElementById('recipe-content').innerHTML = "<p>Recipe not found!</p>";
     }
 }
+
+// Run on page load
+document.addEventListener('DOMContentLoaded', displayRecipe);
+
 
 // Function to select the difficulty and show the instructions
 function selectDifficulty(difficulty) {
@@ -480,7 +513,7 @@ function selectDifficulty(difficulty) {
     
     // Close the dropdown after selection
     document.getElementById('difficulty-dropdown').style.display = 'none';
-    document.getElementById('search-input').value = difficulty; // Set the selected difficulty in the search input
+    document.getElementById('search-input').value = difficulty; 
 }
 
 // Show the difficulty dropdown when the input is focused
@@ -495,9 +528,226 @@ function hideDifficultyDropdown() {
     }, 200);
 }
 
+
+
 // Run the function to display the recipe when the page loads
 window.onload = displayRecipe;
-</script>
 
+// Function to load saved data for a specific recipe
+function loadRecipeData(recipeId) {
+    // Likes
+    const likeCount = parseInt(localStorage.getItem(`likeCount_${recipeId}`)) || 0;
+    document.getElementById('like-count').innerText = likeCount;
+
+    // Follow Status
+    const isFollowing = JSON.parse(localStorage.getItem(`isFollowing_${recipeId}`)) || false;
+    updateFollowButton(isFollowing);
+
+    // Comments
+    const commentsList = document.getElementById('comments-list');
+    const savedComments = JSON.parse(localStorage.getItem(`comments_${recipeId}`)) || [];
+    const commentCount = savedComments.length; // Count of comments
+    // Display comment count
+    document.getElementById('comment-count').innerText = `Comments (${commentCount})`;
+    commentsList.innerHTML = '';
+    savedComments.forEach(comment => {
+        const li = document.createElement('li');
+        li.textContent = comment;
+        commentsList.appendChild(li);
+    });
+    
+}
+
+// Toggle comment box visibility
+function toggleCommentBox() {
+    const commentBox = document.getElementById('comment-section');
+    if (commentBox) {  // Ensure comment box exists
+        if (commentBox.style.display === 'none' || commentBox.style.display === '') {
+            commentBox.style.display = 'block';
+        } else {
+            commentBox.style.display = 'none';
+        }
+    } else {
+        console.warn('Comment section element not found!');
+    }
+}
+
+// Update follow/unfollow button text
+function updateFollowButton(isFollowing) {
+    const followButton = document.querySelector('.action-btn i.fas.fa-user-plus');
+    if (followButton) {  // Ensure follow button exists
+        if (isFollowing) {
+            followButton.parentElement.innerHTML = '<i class="fas fa-user-check"></i> Unfollow'; 
+        } else {
+            followButton.parentElement.innerHTML = '<i class="fas fa-user-plus"></i> Follow';
+        }
+    } else {
+        console.warn('Follow button element not found!');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  const recipeId = getUrlParameter('id');  
+  
+  // Load the recipe data (likes, comments) after the DOM is fully loaded
+  fetch(`/api/recipe-data?id=${recipeId}`)
+    .then(res => res.json())
+    .then(data => {
+      // Handle like count
+      const likeCount = data.likes || 0;
+      document.getElementById('like-count').innerText = likeCount;
+
+      // Handle comments
+      const comments = data.comments || [];
+      const commentsList = document.getElementById('comments-list');
+      const commentCountSpan = document.getElementById('comment-count');
+
+      // Clear existing comments before adding new ones
+      commentsList.innerHTML = '';
+
+      // Loop through the comments and add them to the list
+      comments.forEach((text, index) => {
+        const li = document.createElement('li');
+        li.className = 'comment-item';
+        li.innerHTML = `
+          <span class="comment-text">${text}</span>
+          <i class="fas fa-trash delete-icon" onclick="deleteComment(${index})"></i>
+        `;
+        commentsList.appendChild(li);
+      });
+
+      // Update the comment count
+      commentCountSpan.innerText = `Comments (${comments.length})`;
+    });
+});
+
+function likeRecipe() {
+    const recipeId = getUrlParameter('id');
+    const userId = localStorage.getItem('userId');
+    const userName = localStorage.getItem('userName');
+    const recipeTitle = recipes[recipeId].title;
+
+    fetch('/api/like', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ recipeId, userId, userName, recipeTitle })
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('like-count').innerText = data.likes;
+        alert(`${userName} liked the recipe "${recipeTitle}"`);
+    });
+}
+
+function postComment() {
+  const recipeId = getUrlParameter('id');
+  const commentInput = document.getElementById('comment-input');
+  const commentText = commentInput.value.trim();
+  const userId = localStorage.getItem('userId');
+  const userName = localStorage.getItem('userName');
+  const recipeTitle = recipes[recipeId].title;
+
+  if (commentText) {
+    fetch('/api/comment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ recipeId, commentText, userId, userName, recipeTitle })
+    })
+    .then(res => res.json())
+    .then(data => {
+      const commentsList = document.getElementById('comments-list');
+      const commentCountSpan = document.getElementById('comment-count');
+
+      commentsList.innerHTML = ''; // Clear old comments
+
+      data.comments.forEach((text, index) => {
+        const li = document.createElement('li');
+        li.className = 'comment-item';
+        li.innerHTML = `
+          <span class="comment-text">${text}</span>
+          <i class="fas fa-trash delete-icon" onclick="deleteComment(this)"></i>
+        `;
+        commentsList.appendChild(li);
+      });
+
+      // Update the comment count
+      commentCountSpan.innerText = `Comments (${data.comments.length})`;
+
+      commentInput.value = '';
+      alert(`${userName} commented on "${recipeTitle}"`);
+    });
+  }
+}
+
+function deleteComment(commentIndex) {
+  const recipeId = getUrlParameter('id');
+
+  fetch('/api/delete-comment', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ recipeId, commentIndex })
+  })
+    .then(res => res.json())
+    .then(data => {
+      // Reload updated comment list
+      loadRecipeData(recipeId);
+    });
+}
+
+// Function to follow/unfollow a recipe
+function followRecipe() {
+    const recipeId = getUrlParameter('id');
+    const isFollowing = JSON.parse(localStorage.getItem(`isFollowing_${recipeId}`)) || false; // Check if already following
+    const followButton = document.getElementById('follow-button');
+    const userId = localStorage.getItem('userId');
+    const userName = localStorage.getItem('userName');
+    const recipeTitle = recipes[recipeId].title;
+
+    // Toggle follow status and update localStorage
+    localStorage.setItem(`isFollowing_${recipeId}`, JSON.stringify(!isFollowing));
+
+    // Update button text and icon based on current follow status
+    if (!isFollowing) {
+        // If not following, show "Following"
+        followButton.innerHTML = '<i class="fas fa-user-check"></i> Following';
+    } else {
+        // If following, show "Follow"
+        followButton.innerHTML = '<i class="fas fa-user-plus"></i> Follow';
+    }
+
+    // Send follow/unfollow notification to the server
+    const action = !isFollowing ? 'followed' : 'unfollowed';
+    fetch('/api/notification', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            userId,
+            message: `${userName} ${action} the recipe "${recipeTitle}"`
+        })
+    });
+
+    // Show an alert with the action
+    alert(`${userName} ${action} the recipe "${recipeTitle}"`);
+}
+
+
+
+// Initialize the follow button on page load
+function initFollowButton() {
+    const recipeId = getUrlParameter('id');
+    const isFollowing = JSON.parse(localStorage.getItem(`isFollowing_${recipeId}`)) || false;
+    const followButton = document.getElementById('follow-button');
+
+    // Set the button text and icon based on the follow status
+    if (isFollowing) {
+        followButton.innerHTML = '<i class="fas fa-user-check"></i> Following';  // Show Following if already followed
+    } else {
+        followButton.innerHTML = '<i class="fas fa-user-plus"></i> Follow';  // Show Follow if not followed
+    }
+}
+
+// Call this function on page load to initialize the button state
+window.onload = initFollowButton;
+</script>
 </body>
 </html>
